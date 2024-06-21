@@ -33,7 +33,7 @@ const SurveyPage: React.FC = () => {
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
-
+  
     if (type === 'checkbox') {
       const checkbox = e.target as HTMLInputElement;
       setFormData((prevState) => ({
@@ -49,17 +49,20 @@ const SurveyPage: React.FC = () => {
       }));
     }
   };
+  
 
   const validateForm = () => {
-    const requiredFields = ['gender', 'yearLevel', 'course', 'stressFrequency', 'stressSource', 'copingMechanisms', 'copingEffectiveness', 'stressLevel', 'soughtProfessionalHelp'];
+    const requiredFields: (keyof FormData)[] = ['gender', 'yearLevel', 'course', 'stressFrequency', 'stressSource', 'copingMechanisms' ,'copingEffectiveness', 'stressLevel', 'soughtProfessionalHelp'];
+  
     const missingFields = requiredFields.filter(field => {
       if (field === 'copingMechanisms') {
-        return formData[field].length === 0;
+        return formData.copingMechanisms.length === 0;
       } else {
-        return !formData[field];
+        const key = field as keyof FormData;
+        return !formData[key];
       }
     });
-
+  
     if (missingFields.length > 0) {
       const missingFieldNames = missingFields.map(field => {
         switch (field) {
@@ -74,7 +77,7 @@ const SurveyPage: React.FC = () => {
           case 'stressSource':
             return 'Primary Source of Stress';
           case 'copingMechanisms':
-            return 'Coping Mechanisms';
+            return formData.copingMechanisms.length === 0 ? 'Coping Mechanisms (Select at least one)' : 'Coping Mechanisms';
           case 'copingEffectiveness':
             return 'Effectiveness of Coping Mechanisms';
           case 'stressLevel':
@@ -82,16 +85,18 @@ const SurveyPage: React.FC = () => {
           case 'soughtProfessionalHelp':
             return 'Professional Help';
           default:
-            return field;
+            return '';
         }
       });
-
+    
       alert(`Please answer all required questions:\n\n- ${missingFieldNames.join('\n- ')}`);
       return false;
     }
-
+    
+  
     return true;
   };
+  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
