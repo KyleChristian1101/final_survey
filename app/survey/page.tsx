@@ -1,24 +1,37 @@
-"use client";
-import React, { useState } from 'react';
+"use client"
+import React, { useState, ChangeEvent } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import styles from './SurveyPage.module.css';
 
-const SurveyPage = () => {
-  const [formData, setFormData] = useState({
+interface FormData {
+  name: string;
+  gender: string;
+  yearLevel: string;
+  course: string;
+  stressFrequency: string;
+  stressSource: string;
+  copingMechanisms: string[];
+  copingEffectiveness: string;
+  stressLevel: string;
+  soughtProfessionalHelp: string;
+}
+
+const SurveyPage: React.FC = () => {
+  const [formData, setFormData] = useState<FormData>({
     name: '',
     gender: '',
     yearLevel: '',
     course: '',
     stressFrequency: '',
     stressSource: '',
-    copingMechanisms: [] as string[],
+    copingMechanisms: [],
     copingEffectiveness: '',
     stressLevel: '',
     soughtProfessionalHelp: '',
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
 
     if (type === 'checkbox') {
@@ -30,30 +43,64 @@ const SurveyPage = () => {
           : prevState.copingMechanisms.filter((cm) => cm !== value),
       }));
     } else {
-      setFormData({
-        ...formData,
+      setFormData((prevState) => ({
+        ...prevState,
         [name]: value,
-      });
+      }));
     }
   };
 
   const validateForm = () => {
-    const { gender, yearLevel, course, stressFrequency, stressSource, stressLevel } = formData;
-    if (!gender || !yearLevel || !course || !stressFrequency || !stressSource || !stressLevel) {
+    const requiredFields = ['gender', 'yearLevel', 'course', 'stressFrequency', 'stressSource', 'copingMechanisms', 'copingEffectiveness', 'stressLevel', 'soughtProfessionalHelp'];
+    const missingFields = requiredFields.filter(field => {
+      if (field === 'copingMechanisms') {
+        return formData[field].length === 0;
+      } else {
+        return !formData[field];
+      }
+    });
+
+    if (missingFields.length > 0) {
+      const missingFieldNames = missingFields.map(field => {
+        switch (field) {
+          case 'gender':
+            return 'Gender';
+          case 'yearLevel':
+            return 'Year Level';
+          case 'course':
+            return 'Course';
+          case 'stressFrequency':
+            return 'Frequency of Stress';
+          case 'stressSource':
+            return 'Primary Source of Stress';
+          case 'copingMechanisms':
+            return 'Coping Mechanisms';
+          case 'copingEffectiveness':
+            return 'Effectiveness of Coping Mechanisms';
+          case 'stressLevel':
+            return 'Level of Stress';
+          case 'soughtProfessionalHelp':
+            return 'Professional Help';
+          default:
+            return field;
+        }
+      });
+
+      alert(`Please answer all required questions:\n\n- ${missingFieldNames.join('\n- ')}`);
       return false;
     }
+
     return true;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) {
-      alert('Please answer all required questions.');
       return;
     }
     try {
       await axios.post('/api/submit-survey', formData);
-      window.location.href = '/thankyou';
+      window.location.href='/thankyou'
     } catch (error) {
       alert('Error submitting survey');
       console.error('Error submitting survey:', error);
@@ -147,10 +194,11 @@ const SurveyPage = () => {
             What is the primary source of your academic stress?
             <select name="stressSource" value={formData.stressSource} onChange={handleChange} className={styles.inputField}>
               <option value="" disabled>Select Source</option>
-              <option value="Exams">Exams</option>
-              <option value="Assignments">Assignments</option>
-              <option value="Presentations">Presentations</option>
-              <option value="Group Projects">Group Projects</option>
+              <option value="Coursework Load">Coursework Load</option>
+              <option value="Performance Pressure">Performance Pressure</option>
+              <option value="Time Management">Time Management</option>
+              <option value="Teacher/Professor">Teacher/Professor</option>
+              <option value="Financial Concerns">Financial Concerns</option>
               <option value="Balancing Academics with personal life">Balancing Academics with personal life</option>
             </select>
           </label>
