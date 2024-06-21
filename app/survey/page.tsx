@@ -1,13 +1,10 @@
-// SurveyPage.tsx
-
-"use client"
+"use client";
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import styles from './SurveyPage.module.css';
 
 const SurveyPage = () => {
-
   const [formData, setFormData] = useState({
     name: '',
     gender: '',
@@ -16,16 +13,16 @@ const SurveyPage = () => {
     stressFrequency: '',
     stressSource: '',
     copingMechanisms: [] as string[],
-    copingEffectiveness: '3',
+    copingEffectiveness: '',
     stressLevel: '',
-    soughtProfessionalHelp: 'false',
+    soughtProfessionalHelp: '',
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
 
     if (type === 'checkbox') {
-      const checkbox = e.target as HTMLInputElement; // Type assertion
+      const checkbox = e.target as HTMLInputElement;
       setFormData((prevState) => ({
         ...prevState,
         copingMechanisms: checkbox.checked
@@ -56,7 +53,7 @@ const SurveyPage = () => {
     }
     try {
       await axios.post('/api/submit-survey', formData);
-      window.location.href = '/thankyou'
+      window.location.href = '/thankyou';
     } catch (error) {
       alert('Error submitting survey');
       console.error('Error submitting survey:', error);
@@ -66,8 +63,8 @@ const SurveyPage = () => {
   return (
     <div className={styles.surveyContainer}>
       <div className={styles.card}>
+        <div className={styles.redLine}></div>
         <h2>Mental Health and Academic Stress</h2>
-        <hr className={styles.titleLine} />
         <p>
           This form is designed to gather insights and experiences from students regarding the impact of academic stress on mental health. Your responses will help us understand the challenges students face and guide us in creating better support systems and resources.
         </p>
@@ -82,18 +79,19 @@ const SurveyPage = () => {
         </p>
       </div>
       <form onSubmit={handleSubmit} className={styles.surveyForm}>
+        <div className={styles.redLine}></div>
         <div className={styles.card}>
           <label>
             Name (optional):
             <input type="text" name="name" value={formData.name} onChange={handleChange} className={styles.inputField} />
           </label>
         </div>
-        
+
         <div className={styles.card}>
           <label>
             Gender:
             <select name="gender" value={formData.gender} onChange={handleChange} className={styles.inputField}>
-              <option value="">Select Gender</option>
+              <option value="" disabled>Select Gender</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
               <option value="Prefer not to say">Prefer not to say</option>
@@ -106,7 +104,7 @@ const SurveyPage = () => {
           <label>
             Year Level:
             <select name="yearLevel" value={formData.yearLevel} onChange={handleChange} className={styles.inputField}>
-              <option value="">Select Year Level</option>
+              <option value="" disabled>Select Year Level</option>
               <option value="1st Year College">1st Year College</option>
               <option value="2nd Year College">2nd Year College</option>
               <option value="3rd Year College">3rd Year College</option>
@@ -119,7 +117,7 @@ const SurveyPage = () => {
           <label>
             Course:
             <select name="course" value={formData.course} onChange={handleChange} className={styles.inputField}>
-              <option value="">Select Course</option>
+              <option value="" disabled>Select Course</option>
               <option value="Business and Management">Business and Management</option>
               <option value="Engineering and Technology">Engineering and Technology</option>
               <option value="Health Sciences">Health Sciences</option>
@@ -135,7 +133,7 @@ const SurveyPage = () => {
           <label>
             How often do you feel stressed about your academic workload?
             <select name="stressFrequency" value={formData.stressFrequency} onChange={handleChange} className={styles.inputField}>
-              <option value="">Select Frequency</option>
+              <option value="" disabled>Select Frequency</option>
               <option value="Rarely">Rarely</option>
               <option value="Sometimes">Sometimes</option>
               <option value="Often">Often</option>
@@ -148,7 +146,7 @@ const SurveyPage = () => {
           <label>
             What is the primary source of your academic stress?
             <select name="stressSource" value={formData.stressSource} onChange={handleChange} className={styles.inputField}>
-              <option value="">Select Source</option>
+              <option value="" disabled>Select Source</option>
               <option value="Exams">Exams</option>
               <option value="Assignments">Assignments</option>
               <option value="Presentations">Presentations</option>
@@ -195,11 +193,12 @@ const SurveyPage = () => {
           <label>
             How well do you think these coping mechanisms help you with your stress?
             <select name="copingEffectiveness" value={formData.copingEffectiveness} onChange={handleChange} className={styles.inputField}>
+              <option value="" disabled>Select Answer</option>
               <option value="1">1 - Slightly Helpful</option>
-              <option value="2">2</option>
-              <option value="3">3</option>
-              <option value="4">4</option>
-              <option value="5">5 - Very Helpful</option>
+              <option value="2">2 - Somewhat Helpful</option>
+              <option value="3">3 - Helpful</option>
+              <option value="4">4 - Very Helpful</option>
+              <option value="5">5 - Extremely Helpful</option>
             </select>
           </label>
         </div>
@@ -208,7 +207,7 @@ const SurveyPage = () => {
           <label>
             When you experience stress, what is usually the level of your stress?
             <select name="stressLevel" value={formData.stressLevel} onChange={handleChange} className={styles.inputField}>
-              <option value="">Select Stress Level</option>
+              <option value="" disabled>Select Stress Level</option>
               <option value="Low">Low</option>
               <option value="Moderate">Moderate</option>
               <option value="High">High</option>
@@ -220,6 +219,7 @@ const SurveyPage = () => {
           <label>
             Have you tried seeking professional help?
             <select name="soughtProfessionalHelp" value={formData.soughtProfessionalHelp} onChange={handleChange} className={styles.inputField}>
+              <option value="" disabled>Select Answer</option>
               <option value="true">Yes</option>
               <option value="false">No</option>
             </select>

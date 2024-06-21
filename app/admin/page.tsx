@@ -1,10 +1,9 @@
-"use client"
-
+// app/admin/page.tsx
+"use client";
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { Bar } from 'react-chartjs-2';
+import { Line } from 'react-chartjs-2';
 import 'chart.js/auto';
-
 
 interface SurveyData {
   name: string;
@@ -26,6 +25,7 @@ const GraphPage: React.FC = () => {
     const fetchData = async () => {
       try {
         const response = await axios.get('/api/get-survey-data');
+        console.log("Survey data received:", response.data);
         setSurveyData(response.data);
       } catch (error) {
         console.error('Error fetching survey data:', error);
@@ -36,18 +36,19 @@ const GraphPage: React.FC = () => {
 
   const processData = (data: SurveyData[]) => {
     const courses = ["Business and Management", "Engineering and Technology", "Health Sciences", "Arts and Humanities", "Education", "Sciences", "Social Sciences"];
-    const years = ["1st Year College", "2nd Year College", "3rd Year College", "4th Year College"];
-
     const courseData = courses.map(course => {
-      const courseSurveyData = data.filter(d => d.course === course);
-      const averageStressLevel = courseSurveyData.reduce((acc, cur) => acc + parseInt(cur.stressLevel), 0) / courseSurveyData.length;
-      return averageStressLevel || 0;
+      const courseSurveyData = data.filter(d => d.course === course && d.stressLevel !== ''); // Filter out entries with empty stressLevel
+      const totalStressLevels = courseSurveyData.reduce((acc, cur) => acc + parseInt(cur.stressLevel || '0', 10), 0);
+      const averageStressLevel = courseSurveyData.length > 0 ? totalStressLevels / courseSurveyData.length : 0;
+      return isNaN(averageStressLevel) ? 0 : averageStressLevel;
     });
 
+    const years = ["1st Year College", "2nd Year College", "3rd Year College", "4th Year College"];
     const yearData = years.map(year => {
-      const yearSurveyData = data.filter(d => d.yearLevel === year);
-      const averageStressLevel = yearSurveyData.reduce((acc, cur) => acc + parseInt(cur.stressLevel), 0) / yearSurveyData.length;
-      return averageStressLevel || 0;
+      const yearSurveyData = data.filter(d => d.yearLevel === year && d.stressLevel !== ''); // Filter out entries with empty stressLevel
+      const totalStressLevels = yearSurveyData.reduce((acc, cur) => acc + parseInt(cur.stressLevel || '0', 10), 0);
+      const averageStressLevel = yearSurveyData.length > 0 ? totalStressLevels / yearSurveyData.length : 0;
+      return isNaN(averageStressLevel) ? 0 : averageStressLevel;
     });
 
     return { courseData, yearData };
@@ -55,14 +56,18 @@ const GraphPage: React.FC = () => {
 
   const { courseData, yearData } = processData(surveyData);
 
+  // Log chart data to console
+  console.log("Course Chart Data:", courseData);
+  console.log("Year Chart Data:", yearData);
+
   const courseChartData = {
     labels: ["Business and Management", "Engineering and Technology", "Health Sciences", "Arts and Humanities", "Education", "Sciences", "Social Sciences"],
     datasets: [{
       label: 'Average Stress Level by Course',
       data: courseData,
-      backgroundColor: 'rgba(75, 192, 192, 0.2)',
+      fill: false,
       borderColor: 'rgba(75, 192, 192, 1)',
-      borderWidth: 1
+      tension: 0.1
     }]
   };
 
@@ -71,9 +76,9 @@ const GraphPage: React.FC = () => {
     datasets: [{
       label: 'Average Stress Level by Year Level',
       data: yearData,
-      backgroundColor: 'rgba(153, 102, 255, 0.2)',
+      fill: false,
       borderColor: 'rgba(153, 102, 255, 1)',
-      borderWidth: 1
+      tension: 0.1
     }]
   };
 
@@ -82,11 +87,11 @@ const GraphPage: React.FC = () => {
       <h1>Stress Level Analysis</h1>
       <div>
         <h2>Average Stress Level by Course</h2>
-        <Bar data={courseChartData} />
+        <Line data={courseChartData} />
       </div>
       <div>
         <h2>Average Stress Level by Year Level</h2>
-        <Bar data={yearChartData} />
+        <Line data={yearChartData} />
       </div>
     </div>
   );
