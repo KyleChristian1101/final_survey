@@ -3,7 +3,7 @@ import { NextResponse } from 'next/server';
 import connectMongo from '../../../utils/db';
 import Survey from '../../../models/Survey';
 
-
+export const revalidate = 0;
 export async function GET() {
   try {
     await connectMongo(); // Ensure the database is connected
