@@ -4,7 +4,6 @@ import connectMongo from '../../../utils/db';
 import Survey from '../../../models/Survey';
 
 
-export const dynamic = 'force-dynamic';
 export async function GET() {
   try {
     await connectMongo(); // Ensure the database is connected
