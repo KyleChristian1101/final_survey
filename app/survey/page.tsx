@@ -31,6 +31,8 @@ const SurveyPage: React.FC = () => {
     soughtProfessionalHelp: '',
   });
 
+  const [loading, setLoading] = useState(false);
+
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
   
@@ -49,7 +51,6 @@ const SurveyPage: React.FC = () => {
       }));
     }
   };
-  
 
   const validateForm = () => {
     const requiredFields: (keyof FormData)[] = ['gender', 'yearLevel', 'course', 'stressFrequency', 'stressSource', 'copingMechanisms' ,'copingEffectiveness', 'stressLevel', 'soughtProfessionalHelp'];
@@ -92,28 +93,35 @@ const SurveyPage: React.FC = () => {
       alert(`Please answer all required questions:\n\n- ${missingFieldNames.join('\n- ')}`);
       return false;
     }
-    
   
     return true;
   };
-  
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) {
       return;
     }
+    setLoading(true);
     try {
       await axios.post('/api/submit-survey', formData);
-      window.location.href='/thankyou'
+      window.location.href = '/thankyou';
     } catch (error) {
       alert('Error submitting survey');
       console.error('Error submitting survey:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <div className={styles.surveyContainer}>
+      {loading && (
+        <div className={styles.loadingScreen}>
+          <div className={styles.spinner}></div>
+          <p>Submitting your survey...</p>
+        </div>
+      )}
       <div className={styles.card}>
         <div className={styles.redLine}></div>
         <h2>Mental Health and Academic Stress</h2>

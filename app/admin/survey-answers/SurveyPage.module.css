@@ -1,0 +1,56 @@
+.responseContainer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.responseCard {
+  background-color: #f0f0f0;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* Ensures buttonContainer sticks to bottom */
+}
+
+.responseCard h3 {
+  margin-top: 0;
+  font-size: 1.2rem;
+}
+
+.responseCard p {
+  margin: 5px 0;
+}
+
+.buttonContainer {
+  margin-top: auto; /* Pushes button group to bottom */
+  display: flex;
+  justify-content: flex-end; /* Aligns buttons to the right */
+}
+
+.editButton {
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-right: 10px; /* Add margin between buttons */
+}
+
+.deleteButton {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  text-align: center;
+  text-decoration: none;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 4px;
+}
