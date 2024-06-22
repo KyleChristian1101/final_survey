@@ -36,6 +36,7 @@ const SurveyPage: React.FC = () => {
   });
 
   const [responses, setResponses] = useState<SurveyResponse[]>([]);
+  const [searchQuery, setSearchQuery] = useState<string>('');
 
   useEffect(() => {
     fetchResponses();
@@ -95,6 +96,7 @@ const SurveyPage: React.FC = () => {
   };
 
   const handleEdit = (_id: string) => {
+    // Implement edit functionality here
   };
 
   const handleDelete = async (_id: string) => {
@@ -109,28 +111,54 @@ const SurveyPage: React.FC = () => {
       console.error('Error deleting survey:', error);
     }
   };
-  
+
+  const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  };
+
+  const filteredResponses = responses.filter((response) =>
+    response.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    response.gender.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    response.yearLevel.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    response.course.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    response.stressFrequency.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    response.stressSource.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    response.copingMechanisms.some(cm => cm.toLowerCase().includes(searchQuery.toLowerCase())) ||
+    response.stressLevel.toLowerCase().includes(searchQuery.toLowerCase()) ||
+    response.soughtProfessionalHelp.toString().toLowerCase().includes(searchQuery.toLowerCase())
+  );
 
   return (
-    <div className={styles.responseContainer}>
-      {responses.map((response) => (
-        <div key={response._id} className={styles.responseCard}>
-          <h3>{response.name ? `${response.name}'s Response` : "Unknown's Response"}</h3>
-          <p><strong>Gender:</strong> {response.gender}</p>
-          <p><strong>Year Level:</strong> {response.yearLevel}</p>
-          <p><strong>Course:</strong> {response.course}</p>
-          <p><strong>Stress Frequency:</strong> {response.stressFrequency}</p>
-          <p><strong>Stress Source:</strong> {response.stressSource}</p>
-          <p><strong>Coping Mechanisms:</strong> {response.copingMechanisms.join(', ')}</p>
-          <p><strong>Coping Effectiveness:</strong> {response.copingEffectiveness}</p>
-          <p><strong>Stress Level:</strong> {response.stressLevel}</p>
-          <p><strong>Sought Professional Help:</strong> {response.soughtProfessionalHelp ? 'Yes' : 'No'}</p>
-          <div className={styles.buttonGroup}>
-            <button className={styles.editButton} onClick={() => handleEdit(response._id)}>Edit</button>
-            <button className={styles.deleteButton} onClick={() => handleDelete(response._id)}>Delete</button>
+    <div>
+      <div className={styles.searchContainer}>
+        <input
+          type="text"
+          placeholder="Search..."
+          value={searchQuery}
+          onChange={handleSearchChange}
+          className={styles.searchBox}
+        />
+      </div>
+      <div className={styles.responseContainer}>
+        {filteredResponses.map((response) => (
+          <div key={response._id} className={styles.responseCard}>
+            <h3>{response.name ? `${response.name}'s Response` : "Unknown's Response"}</h3>
+            <p><strong>Gender:</strong> {response.gender}</p>
+            <p><strong>Year Level:</strong> {response.yearLevel}</p>
+            <p><strong>Course:</strong> {response.course}</p>
+            <p><strong>Stress Frequency:</strong> {response.stressFrequency}</p>
+            <p><strong>Stress Source:</strong> {response.stressSource}</p>
+            <p><strong>Coping Mechanisms:</strong> {response.copingMechanisms.join(', ')}</p>
+            <p><strong>Coping Effectiveness:</strong> {response.copingEffectiveness}</p>
+            <p><strong>Stress Level:</strong> {response.stressLevel}</p>
+            <p><strong>Sought Professional Help:</strong> {response.soughtProfessionalHelp ? 'Yes' : 'No'}</p>
+            <div className={styles.buttonGroup}>
+              <button className={styles.editButton} onClick={() => handleEdit(response._id)}>Edit</button>
+              <button className={styles.deleteButton} onClick={() => handleDelete(response._id)}>Delete</button>
+            </div>
           </div>
-        </div>
-      ))}
+        ))}
+      </div>
     </div>
   );
 };

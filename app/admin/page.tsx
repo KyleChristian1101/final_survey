@@ -14,7 +14,7 @@ interface SurveyData {
   stressFrequency: string;
   stressSource: string;
   copingMechanisms: string[];
-  copingEffectiveness: string;
+  copingEffectiveness: number; // Assuming coping effectiveness is a number (1-5)
   stressLevel: string;
   soughtProfessionalHelp: string;
 }
@@ -67,7 +67,7 @@ const GraphPage: React.FC = () => {
       return averageStressLevel;
     });
 
-    const genders = ["Male", "Female", "Other"];
+    const genders = ["Male", "Female", "Prefer not to say" ,"Other"];
     const genderData = genders.map(gender => {
       const genderSurveyData = data.filter(d => d.gender === gender && d.stressLevel in stressLevelMap);
       const totalStressLevels = genderSurveyData.reduce((acc, cur) => acc + stressLevelMap[cur.stressLevel], 0);
@@ -86,7 +86,55 @@ const GraphPage: React.FC = () => {
     return { courseData, yearData, genderData, stressSourceData };
   };
 
+  const processCopingData = (data: SurveyData[]) => {
+    const copingMechanisms = [
+      'Physical Exercise',
+      'Mindfulness and meditation',
+      'Healthy Lifestyle Choices',
+      'Time Management',
+      'Social Support',
+      'Cognitive Behavioral Techniques',
+      'Relaxation Techniques',
+      'Hobbies and Leisure Activities',
+      'Professional Help',
+      'Mindful Living',
+      'Environmental Changes',
+      'Limit Exposure to Stressors',
+    ];
+    const copingEffectivenessData = copingMechanisms.map(mechanism => {
+      const mechanismSurveyData = data.filter(d => d.copingMechanisms.includes(mechanism));
+      const totalEffectiveness = mechanismSurveyData.reduce((acc, cur) => acc + cur.copingEffectiveness, 0);
+      const averageEffectiveness = mechanismSurveyData.length > 0 ? totalEffectiveness / mechanismSurveyData.length : 0;
+      return averageEffectiveness;
+    });
+
+    return copingEffectivenessData;
+  };
+
   const { courseData, yearData, genderData, stressSourceData } = processData(surveyData);
+  const copingChartData = {
+    labels: [
+      'Physical Exercise',
+      'Mindfulness and meditation',
+      'Healthy Lifestyle Choices',
+      'Time Management',
+      'Social Support',
+      'Cognitive Behavioral Techniques',
+      'Relaxation Techniques',
+      'Hobbies and Leisure Activities',
+      'Professional Help',
+      'Mindful Living',
+      'Environmental Changes',
+      'Limit Exposure to Stressors',
+    ],
+    datasets: [{
+      label: 'Coping Mechanisms Effectiveness',
+      data: processCopingData(surveyData),
+      fill: false,
+      borderColor: 'rgba(255, 99, 132, 1)',
+      tension: 0.1
+    }]
+  };
 
   const courseChartData = {
     labels: ["Business and Management", "Engineering and Technology", "Health Sciences", "Arts and Humanities", "Education", "Sciences", "Social Sciences"],
@@ -111,7 +159,7 @@ const GraphPage: React.FC = () => {
   };
 
   const genderChartData = {
-    labels: ["Male", "Female", "Other"],
+    labels: ["Male", "Female", "Prefer not to say","Other"],
     datasets: [{
       label: 'Average Stress Level by Gender',
       data: genderData,
@@ -140,6 +188,7 @@ const GraphPage: React.FC = () => {
         <GraphCard title="Average Stress Level by Year Level" chartData={yearChartData} />
         <GraphCard title="Average Stress Level by Gender" chartData={genderChartData} />
         <GraphCard title="Average Stress Level by Stress Source" chartData={stressSourceChartData} />
+        <GraphCard title="Coping Mechanisms Effectiveness" chartData={copingChartData} />
       </div>
     </div>
   );
