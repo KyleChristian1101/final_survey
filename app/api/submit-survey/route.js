@@ -3,7 +3,6 @@ import connectMongo from '../../../utils/db';
 import Survey from '../../../models/Survey';
 
 
-export const dynamic = 'force-dynamic';
 export async function POST(request) {
   try {
     await connectMongo();
