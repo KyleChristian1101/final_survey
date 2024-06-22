@@ -4,7 +4,7 @@ import connectMongo from '../../../utils/db';
 import Survey from '../../../models/Survey';
 
 
-export const revalidate = 0;
+export const revalidate = 1;
 export async function GET() {
   try {
     await connectMongo(); // Ensure the database is connected
