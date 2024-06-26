@@ -1,48 +1,61 @@
-"use client"
+"use client";
+
 import React, { useState, ChangeEvent } from 'react';
 import axios from 'axios';
-import { useRouter } from 'next/router';
 import styles from './SurveyPage.module.css';
+
 
 interface FormData {
   name: string;
+  age: string;
   gender: string;
-  yearLevel: string;
-  course: string;
-  stressFrequency: string;
-  stressSource: string;
-  copingMechanisms: string[];
-  copingEffectiveness: string;
-  stressLevel: string;
-  soughtProfessionalHelp: string;
+  educationLevel: string;
+  location: string;
+  environmentalKnowledge: string;
+  environmentalConcerns: string[];
+  informationSources: string[];
+  recyclingFrequency: string;
+  recyclingPractice: string;
+  waterUsagePractice: string;
+  energyEfficientAppliancesPractice: string;
+  publicTransportationPractice: string;
+  reducingPlasticsPractice: string;
+  compostingPractice: string;
+  supportingEcoFriendlyBrandsPractice: string;
 }
 
 const SurveyPage: React.FC = () => {
   const [formData, setFormData] = useState<FormData>({
     name: '',
+    age: '',
     gender: '',
-    yearLevel: '',
-    course: '',
-    stressFrequency: '',
-    stressSource: '',
-    copingMechanisms: [],
-    copingEffectiveness: '',
-    stressLevel: '',
-    soughtProfessionalHelp: '',
+    educationLevel: '',
+    location: '',
+    environmentalKnowledge: '',
+    environmentalConcerns: [],
+    informationSources: [],
+    recyclingFrequency: '',
+    recyclingPractice: '',
+    waterUsagePractice: '',
+    energyEfficientAppliancesPractice: '',
+    publicTransportationPractice: '',
+    reducingPlasticsPractice: '',
+    compostingPractice: '',
+    supportingEcoFriendlyBrandsPractice: '',
   });
 
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value, type } = e.target;
-  
+    
     if (type === 'checkbox') {
       const checkbox = e.target as HTMLInputElement;
       setFormData((prevState) => ({
         ...prevState,
-        copingMechanisms: checkbox.checked
-          ? [...prevState.copingMechanisms, value]
-          : prevState.copingMechanisms.filter((cm) => cm !== value),
+        [name]: checkbox.checked
+          ? [...(prevState[name as keyof FormData] as string[]), value]
+          : (prevState[name as keyof FormData] as string[]).filter((item) => item !== value),
       }));
     } else {
       setFormData((prevState) => ({
@@ -53,38 +66,65 @@ const SurveyPage: React.FC = () => {
   };
 
   const validateForm = () => {
-    const requiredFields: (keyof FormData)[] = ['gender', 'yearLevel', 'course', 'stressFrequency', 'stressSource', 'copingMechanisms' ,'copingEffectiveness', 'stressLevel', 'soughtProfessionalHelp'];
+    const requiredFields: (keyof FormData)[] = [
+      'age', 
+      'gender', 
+      'educationLevel', 
+      'location', 
+      'environmentalKnowledge', 
+      'environmentalConcerns',
+      'informationSources', 
+      'recyclingFrequency', 
+      'recyclingPractice', 
+      'waterUsagePractice', 
+      'energyEfficientAppliancesPractice', 
+      'publicTransportationPractice', 
+      'reducingPlasticsPractice', 
+      'compostingPractice', 
+      'supportingEcoFriendlyBrandsPractice'
+    ];
   
     const missingFields = requiredFields.filter(field => {
-      if (field === 'copingMechanisms') {
-        return formData.copingMechanisms.length === 0;
+      if (Array.isArray(formData[field])) {
+        return (formData[field] as string[]).length === 0;
       } else {
-        const key = field as keyof FormData;
-        return !formData[key];
+        return !formData[field];
       }
     });
   
     if (missingFields.length > 0) {
       const missingFieldNames = missingFields.map(field => {
         switch (field) {
+          case 'age':
+            return 'Age';
           case 'gender':
             return 'Gender';
-          case 'yearLevel':
-            return 'Year Level';
-          case 'course':
-            return 'Course';
-          case 'stressFrequency':
-            return 'Frequency of Stress';
-          case 'stressSource':
-            return 'Primary Source of Stress';
-          case 'copingMechanisms':
-            return formData.copingMechanisms.length === 0 ? 'Coping Mechanisms (Select at least one)' : 'Coping Mechanisms';
-          case 'copingEffectiveness':
-            return 'Effectiveness of Coping Mechanisms';
-          case 'stressLevel':
-            return 'Level of Stress';
-          case 'soughtProfessionalHelp':
-            return 'Professional Help';
+          case 'educationLevel':
+            return 'Education Level';
+          case 'location':
+            return 'Location';
+          case 'environmentalKnowledge':
+            return 'Knowledge about Environmental Issues';
+          case 'environmentalConcerns':
+            return 'Environmental Concerns';
+          case 'informationSources':
+            return 'Information Sources';
+          case 'recyclingFrequency':
+            return 'Recycling Frequency';
+          case 'recyclingPractice':
+            return 'Recycling Practice';
+          case 'waterUsagePractice':
+            return 'Water Usage Practice';
+          case 'energyEfficientAppliancesPractice':
+            return 'Energy-efficient Appliances Practice';
+          case 'publicTransportationPractice':
+            return 'Public Transportation/Carpooling Practice';
+          case 'reducingPlasticsPractice':
+            return 'Reducing Single-use Plastics Practice';
+          case 'compostingPractice':
+            return 'Composting Practice';
+          case 'supportingEcoFriendlyBrandsPractice':
+            return 'Supporting Eco-friendly Brands Practice';
           default:
             return '';
         }
@@ -124,18 +164,9 @@ const SurveyPage: React.FC = () => {
       )}
       <div className={styles.card}>
         <div className={styles.redLine}></div>
-        <h2>Mental Health and Academic Stress</h2>
+        <h2>Environmental Awareness and Practices</h2>
         <p>
-          This form is designed to gather insights and experiences from students regarding the impact of academic stress on mental health. Your responses will help us understand the challenges students face and guide us in creating better support systems and resources.
-        </p>
-        <p><strong>Purpose:</strong></p>
-        <ul>
-          <li>To explore the relationship between academic demands and mental well-being.</li>
-          <li>To identify common stressors in the academic environment.</li>
-          <li>To gather suggestions for improving mental health support for students.</li>
-        </ul>
-        <p>
-          Thank you for taking the time to participate in this important survey. Your feedback is invaluable in helping us promote better mental health and well-being among students.
+          We appreciate you taking the time to complete this survey. We will be able to better understand our community's environmental knowledge and behaviors thanks to your responses. 
         </p>
       </div>
       <form onSubmit={handleSubmit} className={styles.surveyForm}>
@@ -149,101 +180,96 @@ const SurveyPage: React.FC = () => {
 
         <div className={styles.card}>
           <label>
+            Age:
+            <select name="age" value={formData.age} onChange={handleChange} className={styles.inputField}>
+              <option value="" disabled>Select Age</option>
+              <option value="Under 18">Under 18</option>
+              <option value="18-24">18-24</option>
+              <option value="25-34">25-34</option>
+              <option value="35-44">35-44</option>
+              <option value="45-54">45-54</option>
+              <option value="55-64">55-64</option>
+              <option value="65 and over">65 and over</option>
+            </select>
+          </label>
+        </div>
+
+        <div className={styles.card}>
+          <label>
             Gender:
             <select name="gender" value={formData.gender} onChange={handleChange} className={styles.inputField}>
               <option value="" disabled>Select Gender</option>
               <option value="Male">Male</option>
               <option value="Female">Female</option>
+              <option value="Non-binary">Non-binary</option>
               <option value="Prefer not to say">Prefer not to say</option>
-              <option value="Other">Other</option>
             </select>
           </label>
         </div>
 
         <div className={styles.card}>
           <label>
-            Year Level:
-            <select name="yearLevel" value={formData.yearLevel} onChange={handleChange} className={styles.inputField}>
-              <option value="" disabled>Select Year Level</option>
-              <option value="1st Year College">1st Year College</option>
-              <option value="2nd Year College">2nd Year College</option>
-              <option value="3rd Year College">3rd Year College</option>
-              <option value="4th Year College">4th Year College</option>
+            Education Level:
+            <select name="educationLevel" value={formData.educationLevel} onChange={handleChange} className={styles.inputField}>
+              <option value="" disabled>Select Education Level</option>
+              <option value="Less than high school">Less than high school</option>
+              <option value="High school diploma or equivalent">High school diploma or equivalent</option>
+              <option value="Some college">Some college</option>
+              <option value="Associate degree">Associate degree</option>
+              <option value="Bachelor’s degree">Bachelor’s degree</option>
+              <option value="Master’s degree">Master’s degree</option>
+              <option value="Doctorate or higher">Doctorate or higher</option>
             </select>
           </label>
         </div>
 
         <div className={styles.card}>
           <label>
-            Course:
-            <select name="course" value={formData.course} onChange={handleChange} className={styles.inputField}>
-              <option value="" disabled>Select Course</option>
-              <option value="Business and Management">Business and Management</option>
-              <option value="Engineering and Technology">Engineering and Technology</option>
-              <option value="Health Sciences">Health Sciences</option>
-              <option value="Arts and Humanities">Arts and Humanities</option>
-              <option value="Education">Education</option>
-              <option value="Sciences">Sciences</option>
-              <option value="Social Sciences">Social Sciences</option>
+            Location:
+            <select name="location" value={formData.location} onChange={handleChange} className={styles.inputField}>
+              <option value="" disabled>Select Location</option>
+              <option value="Urban">Urban</option>
+              <option value="Suburban">Suburban</option>
+              <option value="Rural">Rural</option>
             </select>
           </label>
         </div>
 
         <div className={styles.card}>
           <label>
-            How often do you feel stressed about your academic workload?
-            <select name="stressFrequency" value={formData.stressFrequency} onChange={handleChange} className={styles.inputField}>
-              <option value="" disabled>Select Frequency</option>
-              <option value="Rarely">Rarely</option>
-              <option value="Sometimes">Sometimes</option>
-              <option value="Often">Often</option>
-              <option value="Always">Always</option>
+            How would you rate your knowledge about environmental issues?
+            <select name="environmentalKnowledge" value={formData.environmentalKnowledge} onChange={handleChange} className={styles.inputField}>
+              <option value="" disabled>Select Knowledge Level</option>
+              <option value="Very knowledgeable">Very knowledgeable</option>
+              <option value="Somewhat knowledgeable">Somewhat knowledgeable</option>
+              <option value="Neutral">Neutral</option>
+              <option value="Somewhat unknowledgeable">Somewhat unknowledgeable</option>
+              <option value="Not knowledgeable at all">Not knowledgeable at all</option>
             </select>
           </label>
         </div>
 
         <div className={styles.card}>
           <label>
-            What is the primary source of your academic stress?
-            <select name="stressSource" value={formData.stressSource} onChange={handleChange} className={styles.inputField}>
-              <option value="" disabled>Select Source</option>
-              <option value="Coursework Load">Coursework Load</option>
-              <option value="Performance Pressure">Performance Pressure</option>
-              <option value="Time Management">Time Management</option>
-              <option value="Teacher/Professor">Teacher/Professor</option>
-              <option value="Financial Concerns">Financial Concerns</option>
-              <option value="Balancing Academics with personal life">Balancing Academics with personal life</option>
-            </select>
-          </label>
-        </div>
-
-        <div className={styles.card}>
-          <label>
-            What stress coping mechanisms do you usually do? (Select all that apply)
+            Which of the following environmental issues are you most concerned about? (Select all that apply)
             <div className={styles.checkboxGroup}>
               {[
-                'Physical Exercise',
-                'Mindfulness and meditation',
-                'Healthy Lifestyle Choices',
-                'Time Management',
-                'Social Support',
-                'Cognitive Behavioral Techniques',
-                'Relaxation Techniques',
-                'Hobbies and Leisure Activities',
-                'Professional Help',
-                'Mindful Living',
-                'Environmental Changes',
-                'Limit Exposure to Stressors',
-              ].map((mechanism) => (
-                <label key={mechanism}>
+                'Climate change',
+                'Air pollution',
+                'Water pollution',
+                'Deforestation',
+                'Loss of biodiversity',
+                'Waste management',
+              ].map((concern) => (
+                <label key={concern} className={styles.checkboxLabel}>
                   <input
                     type="checkbox"
-                    name="copingMechanisms"
-                    value={mechanism}
-                    checked={formData.copingMechanisms.includes(mechanism)}
+                    name="environmentalConcerns"
+                    value={concern}
+                    checked={formData.environmentalConcerns.includes(concern)}
                     onChange={handleChange}
                   />
-                  {mechanism}
+                  {concern}
                 </label>
               ))}
             </div>
@@ -252,42 +278,132 @@ const SurveyPage: React.FC = () => {
 
         <div className={styles.card}>
           <label>
-            How well do you think these coping mechanisms help you with your stress?
-            <select name="copingEffectiveness" value={formData.copingEffectiveness} onChange={handleChange} className={styles.inputField}>
-              <option value="" disabled>Select Answer</option>
-              <option value="1">1 - Slightly Helpful</option>
-              <option value="2">2 - Somewhat Helpful</option>
-              <option value="3">3 - Helpful</option>
-              <option value="4">4 - Very Helpful</option>
-              <option value="5">5 - Extremely Helpful</option>
+            Where do you get most of your information about environmental issues? (Select all that apply)
+            <div className={styles.checkboxGroup}>
+              {[
+                'Social media',
+                'News websites',
+                'Television',
+                'Friends/Family',
+                'Community events',
+                'Educational institutions',
+              ].map((source) => (
+                <label key={source} className={styles.checkboxLabel}>
+                  <input
+                    type="checkbox"
+                    name="informationSources"
+                    value={source}
+                    checked={formData.informationSources.includes(source)}
+                    onChange={handleChange}
+                  />
+                  {source}
+                </label>
+              ))}
+            </div>
+          </label>
+        </div>
+
+        <div className={styles.card}>
+          <label>
+            How often do you recycle?
+            <select name="recyclingFrequency" value={formData.recyclingFrequency} onChange={handleChange} className={styles.inputField}>
+              <option value="" disabled>Select Frequency</option>
+              <option value="Always">Always</option>
+              <option value="Often">Often</option>
+              <option value="Sometimes">Sometimes</option>
+              <option value="Rarely">Rarely</option>
+              <option value="Never">Never</option>
             </select>
           </label>
         </div>
 
         <div className={styles.card}>
           <label>
-            When you experience stress, what is usually the level of your stress?
-            <select name="stressLevel" value={formData.stressLevel} onChange={handleChange} className={styles.inputField}>
-              <option value="" disabled>Select Stress Level</option>
-              <option value="Low">Low</option>
-              <option value="Moderate">Moderate</option>
-              <option value="High">High</option>
-            </select>
+            How often do you practice the following eco-friendly habits? (Select an option for each)
           </label>
+          <div className={styles.ecoFriendlyHabits}>
+            <div className={styles.habit}>
+              <label>Recycling:</label>
+              <select name="recyclingPractice" value={formData.recyclingPractice} onChange={handleChange} className={styles.inputField}>
+                <option value="" disabled>Select Frequency</option>
+                <option value="Always">Always</option>
+                <option value="Often">Often</option>
+                <option value="Sometimes">Sometimes</option>
+                <option value="Rarely">Rarely</option>
+                <option value="Never">Never</option>
+              </select>
+            </div>
+            <div className={styles.habit}>
+              <label>Water usage:</label>
+              <select name="waterUsagePractice" value={formData.waterUsagePractice} onChange={handleChange} className={styles.inputField}>
+                <option value="" disabled>Select Frequency</option>
+                <option value="Always">Always</option>
+                <option value="Often">Often</option>
+                <option value="Sometimes">Sometimes</option>
+                <option value="Rarely">Rarely</option>
+                <option value="Never">Never</option>
+              </select>
+            </div>
+            <div className={styles.habit}>
+              <label>Using energy-efficient appliances:</label>
+              <select name="energyEfficientAppliancesPractice" value={formData.energyEfficientAppliancesPractice} onChange={handleChange} className={styles.inputField}>
+                <option value="" disabled>Select Frequency</option>
+                <option value="Always">Always</option>
+                <option value="Often">Often</option>
+                <option value="Sometimes">Sometimes</option>
+                <option value="Rarely">Rarely</option>
+                <option value="Never">Never</option>
+              </select>
+            </div>
+            <div className={styles.habit}>
+              <label>Using public transportation or carpooling:</label>
+              <select name="publicTransportationPractice" value={formData.publicTransportationPractice} onChange={handleChange} className={styles.inputField}>
+                <option value="" disabled>Select Frequency</option>
+                <option value="Always">Always</option>
+                <option value="Often">Often</option>
+                <option value="Sometimes">Sometimes</option>
+                <option value="Rarely">Rarely</option>
+                <option value="Never">Never</option>
+              </select>
+            </div>
+            <div className={styles.habit}>
+              <label>Reducing single-use plastics:</label>
+              <select name="reducingPlasticsPractice" value={formData.reducingPlasticsPractice} onChange={handleChange} className={styles.inputField}>
+                <option value="" disabled>Select Frequency</option>
+                <option value="Always">Always</option>
+                <option value="Often">Often</option>
+                <option value="Sometimes">Sometimes</option>
+                <option value="Rarely">Rarely</option>
+                <option value="Never">Never</option>
+              </select>
+            </div>
+            <div className={styles.habit}>
+              <label>Composting:</label>
+              <select name="compostingPractice" value={formData.compostingPractice} onChange={handleChange} className={styles.inputField}>
+                <option value="" disabled>Select Frequency</option>
+                <option value="Always">Always</option>
+                <option value="Often">Often</option>
+                <option value="Sometimes">Sometimes</option>
+                <option value="Rarely">Rarely</option>
+                <option value="Never">Never</option>
+              </select>
+            </div>
+            <div className={styles.habit}>
+              <label>Supporting eco-friendly brands:</label>
+              <select name="supportingEcoFriendlyBrandsPractice" value={formData.supportingEcoFriendlyBrandsPractice} onChange={handleChange} className={styles.inputField}>
+                <option value="" disabled>Select Frequency</option>
+                <option value="Always">Always</option>
+                <option value="Often">Often</option>
+                <option value="Sometimes">Sometimes</option>
+                <option value="Rarely">Rarely</option>
+                <option value="Never">Never</option>
+              </select>
+            </div>
+          </div>
         </div>
-
-        <div className={styles.card}>
-          <label>
-            Have you tried seeking professional help?
-            <select name="soughtProfessionalHelp" value={formData.soughtProfessionalHelp} onChange={handleChange} className={styles.inputField}>
-              <option value="" disabled>Select Answer</option>
-              <option value="true">Yes</option>
-              <option value="false">No</option>
-            </select>
-          </label>
+        <div className={styles.submitButtonContainer}>
+          <button type="submit" className={styles.submitButton}>Submit</button>
         </div>
-
-        <button type="submit" className={styles.buttonSubmit}>Submit</button>
       </form>
     </div>
   );

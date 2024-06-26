@@ -10,7 +10,7 @@ const ThankYouPage = () => {
         <h2>Thank you for taking the survey!</h2>
         <hr className={styles.titleLine} />
         <p>Your responses have been recorded.</p>
-        <p>Your answers will remain private and confidential.</p>
+        <p>We appreciate your time and effort in helping us understand community environmental awareness and practices.</p>
       </div>
     </div>
   );

@@ -1,168 +1,117 @@
+/* SurveyPage.module.css */
+
 .surveyContainer {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    color: #333;
-    padding: 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  background-color: #488286;
+  color: #283032;
+  padding: 1rem;
 }
 
-.card, .surveyForm {
-    width: 100%;
-    max-width: 800px; /* Maximum width for better readability */
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    background-color: rgba(255, 255, 255, 0.95); /* Light gray background color with transparency for cards */
-    margin-bottom: 1rem;
-    text-align: left; /* Ensure text inside card is left-aligned */
-    font-size: 0.9rem; /* Decreased font size for card content */
-    position: relative; /* Needed for the red line positioning */
+.card {
+  width: 100%;
+  max-width: 800px;
+  padding: 1rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: rgba(255, 255, 255, 0.95);
+  margin-bottom: 1rem;
+  text-align: left;
 }
 
-.redLine {
-    background-color: red;
-    height: 4px;
-    width: 100%;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
 
 .card h2 {
-    font-size: 1.5rem; /* Increased font size for heading */
-    font-weight: bold; /* Emphasize by making it bold */
-    margin-bottom: 0.5rem;
-}
+    font-size: 2rem; 
+    font-weight: bold; 
+    margin-bottom: 1rem; 
+    color: #305252; 
+    text-align: center; 
+    text-transform: capitalize; 
+    border-bottom: 2px solid #77878B; 
+    padding-bottom: 1rem; 
+  }
+  
+  
 
-.titleLine {
-    width: 100%;
-    border-top: 1px solid #ccc;
-    margin: 0.5rem 0;
-}
+  .card p {
+    line-height: 1.6; 
+    margin-bottom: 1.5rem; 
+    color: #384042; 
+    font-size: 1rem; 
+    text-align: justify; 
+  }
+  
 
-.card p {
-    line-height: 1.4; /* Adjusted line height for better readability */
-    margin-bottom: 0.5rem;
-}
+  .surveyForm {
+    width: 100%; 
+    max-width: 800px; 
+    padding: 1.5rem; 
+    border-radius: 8px; 
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); 
+    background-color: #B7D5D4; 
+    margin-top: 1.5rem; 
+    text-align: left; 
+  }
+  
 
-.card ul {
-    margin-top: 0.5rem;
-    margin-bottom: 1rem;
-}
-
-.card ul li {
-    margin-bottom: 0.3rem;
-}
-
-.surveyForm {
-    background: rgba(255, 255, 255, 0.8); /* White background color with transparency for the form */
-    padding: 1rem;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    align-items: center; /* Center align the form content */
-}
-
-.inputField {
-    width: calc(100% - 10px);
-    padding: 0.5rem;
-    margin-top: 0.5rem;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #f5f5f5;
-    color: #333;
-    font-size: 0.8rem; /* Decreased font size for input fields */
-}
+  .inputField {
+    width: calc(100% - 10px); 
+    padding: 0.5rem; 
+    margin-top: 0.5rem; 
+    border: 1px solid #488286; 
+    border-radius: 4px; 
+    background-color: #f5f5f5; 
+    color: #333; 
+    font-size: 0.9rem;
+  }
+  
 
 .checkboxGroup {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.2rem;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
 }
 
-.checkboxGroup label {
-    flex-basis: calc(50% - 0.2rem);
-    margin: 0.2rem 0;
-    display: flex;
-    align-items: center;
-    color: #333;
-    font-size: 0.8rem; /* Decreased font size for checkbox labels */
+.checkboxLabel {
+  display: flex;
+  align-items: center;
+  font-size: 0.9rem;
 }
 
-.checkboxGroup input {
-    margin-right: 0.2rem;
+.checkboxLabel input {
+  margin-right: 0.5rem;
 }
 
-.buttonSubmit {
-    width: 100%;
-    padding: 0.6rem;
-    margin-top: 0.8rem;
-    background: #2575fc;
-    border: none;
-    border-radius: 4px;
-    color: white;
-    font-size: 0.9rem; /* Decreased font size for the submit button */
-    cursor: pointer;
+.ecoFriendlyHabits {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 1rem;
 }
 
-.buttonSubmit:hover {
-    background: #6a11cb;
+.habit {
+  margin-bottom: 1rem;
 }
 
-@media (max-width: 768px) {
-    .card, .surveyForm {
-        padding: 0.5rem; /* Adjusted padding for smaller screens */
-    }
-
-    .card h2 {
-        font-size: 1.3rem; /* Decreased font size for heading on smaller screens */
-    }
-
-    .card p {
-        font-size: 0.85rem; /* Adjusted font size for paragraphs on smaller screens */
-    }
-
-    .checkboxGroup label {
-        font-size: 0.75rem; /* Decreased font size for checkbox labels on smaller screens */
-    }
-
-    .inputField {
-        font-size: 0.75rem; /* Decreased font size for input fields on smaller screens */
-    }
-
-    .buttonSubmit {
-        font-size: 0.85rem; /* Decreased font size for the submit button on smaller screens */
-    }
-}
-
-.loadingScreen {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
+.submitButtonContainer {
+    margin-top: 1rem; 
+    text-align: center; 
   }
   
-  .spinner {
-    border: 8px solid #f3f3f3;
-    border-top: 8px solid #3498db;
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    animation: spin 1s linear infinite;
+
+  .submitButton {
+    padding: 0.8rem 2rem; 
+    background-color: #373E40; 
+    border: none; 
+    border-radius: 4px; 
+    color: white; 
+    font-size: 1rem; 
+    cursor: pointer; 
   }
   
-  @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  .submitButton:hover {
+    background-color: #46585d; 
   }
+  
