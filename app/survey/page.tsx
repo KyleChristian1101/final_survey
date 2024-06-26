@@ -216,8 +216,8 @@ const SurveyPage: React.FC = () => {
               <option value="High school diploma or equivalent">High school diploma or equivalent</option>
               <option value="Some college">Some college</option>
               <option value="Associate degree">Associate degree</option>
-              <option value="Bachelor’s degree">Bachelor’s degree</option>
-              <option value="Master’s degree">Master’s degree</option>
+              <option value="Bachelor&apos;s degree">Bachelor&apos;s degree</option>
+              <option value="Master&apos;s degree">Master&apos;s degree</option>
               <option value="Doctorate or higher">Doctorate or higher</option>
             </select>
           </label>
